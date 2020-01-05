@@ -12,7 +12,7 @@
 <dependency>
   <groupId>com.github.yingzhuo</groupId>
   <artifactId>spring-boot-stater-env</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
 </dependency>
 ```
 
@@ -48,7 +48,7 @@ public class ApplicationConfig() {
 }
 ```
 
-#### (3) use `hocon` file as property source
+#### (3) use `hocon` file as property source **(highly recommended)**
 
 ```java
 import org.springframework.boot.env.HoconPropertySourceFactory;
