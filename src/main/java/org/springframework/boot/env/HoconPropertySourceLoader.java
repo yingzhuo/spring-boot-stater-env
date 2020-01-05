@@ -8,35 +8,37 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package org.springframework.boot.env;
 
-import com.moandjiezana.toml.Toml;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 /**
  * @author <a href="mailto:yingzhor@gmail.com">应卓</a>
- * @since 0.0.1
+ * @since 0.0.2
  */
-public class TomlPropertySourceLoader implements PropertySourceLoader {
+public class HoconPropertySourceLoader implements PropertySourceLoader {
 
     @Override
     public String[] getFileExtensions() {
-        return new String[]{"toml"};
+        return new String[]{"conf"};
     }
 
+    @Override
     public List<PropertySource<?>> load(String name, Resource resource) throws IOException {
-        try (InputStream in = resource.getInputStream()) {
-            Toml toml = new Toml().read(in);
-            Map<String, Object> source = toml.toMap();
+        Config config = ConfigFactory.parseURL(resource.getURL());
 
-            Map<String, Object> result = new LinkedHashMap<>();
-            buildFlattenedMap(result, source, null);
-            return Collections.singletonList(new MapPropertySource(name, result));
+        Map<String, Object> result = new LinkedHashMap<>();
+        buildFlattenedMap(result, config.root().unwrapped(), null);
+        if (result.isEmpty()) {
+            return Collections.emptyList();
         }
+
+        return Collections.singletonList(new MapPropertySource(name, result));
     }
 
     private void buildFlattenedMap(Map<String, Object> result, Map<String, Object> source, String root) {
@@ -71,4 +73,5 @@ public class TomlPropertySourceLoader implements PropertySourceLoader {
             }
         });
     }
+
 }

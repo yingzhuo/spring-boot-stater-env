@@ -6,13 +6,13 @@
 
 ### Download
 
-* [maven / gradle](https://search.maven.org/search?q=spring-boot-starter-env) is highly recommended.
+* maven / gradle is highly recommended.
 
 ```xml
 <dependency>
   <groupId>com.github.yingzhuo</groupId>
   <artifactId>spring-boot-stater-env</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 </dependency>
 ```
 
@@ -42,6 +42,21 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource(value = "classpath:/config.yaml", factory = YamlPropertySourceFactory.class)
+public class ApplicationConfig() {
+
+    // ...
+}
+```
+
+#### (3) use `hocon` file as property source
+
+```java
+import org.springframework.boot.env.HoconPropertySourceFactory;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+
+@Configuration
+@PropertySource(value = "classpath:/config.conf", factory = HoconPropertySourceFactory.class)
 public class ApplicationConfig() {
 
     // ...
