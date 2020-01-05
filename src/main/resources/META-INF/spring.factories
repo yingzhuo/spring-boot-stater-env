@@ -1,3 +1,3 @@
 org.springframework.boot.env.PropertySourceLoader=\
-    org.springframework.boot.env.TomlPropertySourceLoader,\
-    org.springframework.boot.env.HoconPropertySourceLoader
+    org.springframework.boot.env.HoconPropertySourceLoader,\
+    org.springframework.boot.env.TomlPropertySourceLoader

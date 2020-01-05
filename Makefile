@@ -18,14 +18,9 @@ deploy:
 install:
 	@mvn -f $(CURDIR)/pom.xml clean install -Dmaven.test.skip=true
 
-version:
-	@mvn -f $(CURDIR)/pom.xml versions:set
-	@mvn -f $(CURDIR)/pom.xml -N versions:update-child-modules
-	@mvn -f $(CURDIR)/pom.xml versions:commit
-
 github: clean
 	@git add .
 	@git commit -m "$(timestamp)"
 	@git push
 
-.PHONY: no_default clean compile package install deploy version github
+.PHONY: no_default clean compile package install deploy github
