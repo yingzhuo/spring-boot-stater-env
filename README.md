@@ -12,7 +12,7 @@
 <dependency>
   <groupId>com.github.yingzhuo</groupId>
   <artifactId>spring-boot-stater-env</artifactId>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
 </dependency>
 ```
 
@@ -62,6 +62,40 @@ public class ApplicationConfig {
     // ...
 }
 ```
+
+#### (4) use `AbstractConventionEnvironmentPostProcessor` load property-source file(s) implicitly
+
+```java
+import org.springframework.boot.env.support.AbstractConventionEnvironmentPostProcessor;
+import org.springframework.core.Ordered;
+
+public class MyEnvironmentPostProcessor extends AbstractConventionEnvironmentPostProcessor {
+
+    private static final String[] PREFIX = {
+            "classpath:my-project",
+    };
+
+    private static final String NAME = "my-project";
+
+    public ConventionEnvironmentPostProcessor() {
+        super(PREFIX, NAME, Ordered.HIGHEST_PRECEDENCE);
+    }
+}
+```
+
+Do NOT forget register it. In your `classpath:/META-INF/spring.factories`
+
+```txt
+org.springframework.boot.env.EnvironmentPostProcessor=my.project.MyEnvironmentPostProcessor
+```
+
+Now, file(s) will be loaded if exists.
+ - `classpath:my-project.conf`
+ - `classpath:my-project.toml`
+ - `classpath:my-project.yml`
+ - `classpath:my-project.yaml`
+ - `classpath:my-project.properties`
+ - `classpath:my-project.xml` ([dtd](http://java.sun.com/dtd/properties.dtd))
 
 ### Contributing
 

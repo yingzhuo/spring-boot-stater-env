@@ -1,0 +1,199 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *                 _                   _                 _            _             _
+ *  ___ _ __  _ __(_)_ __   __ _      | |__   ___   ___ | |_      ___| |_ __ _ _ __| |_ ___ _ __       ___ _ ____   __
+ * / __| '_ \| '__| | '_ \ / _` |_____| '_ \ / _ \ / _ \| __|____/ __| __/ _` | '__| __/ _ \ '__|____ / _ \ '_ \ \ / /
+ * \__ \ |_) | |  | | | | | (_| |_____| |_) | (_) | (_) | ||_____\__ \ || (_| | |  | ||  __/ | |_____|  __/ | | \ V /
+ * |___/ .__/|_|  |_|_| |_|\__, |     |_.__/ \___/ \___/ \__|    |___/\__\__,_|_|   \__\___|_|        \___|_| |_|\_/
+ *     |_|                 |___/
+ *
+ * https://github.com/yingzhuo/spring-boot-stater-env
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+package org.springframework.boot.env.support;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.env.*;
+import org.springframework.core.Ordered;
+import org.springframework.core.env.CompositePropertySource;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.PropertySource;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+/**
+ * @author <a href="mailto:yingzhor@gmail.com">应卓</a>
+ * @since 0.0.4
+ */
+public abstract class AbstractConventionEnvironmentPostProcessor implements EnvironmentPostProcessor, Ordered {
+
+    private final ResourceLoader resourceLoader = new DefaultResourceLoader();
+    private final String[] locationsPrefix;
+    private final String name;
+    private final int order;
+
+    private final PropertySourceLoader hocon = new HoconPropertySourceLoader();
+    private final PropertySourceLoader toml = new TomlPropertySourceLoader();
+    private final PropertySourceLoader yaml = new YamlPropertySourceLoader();
+    private final PropertySourceLoader prop = new PropertiesPropertySourceLoader();
+
+    public AbstractConventionEnvironmentPostProcessor(String[] locationsPrefix) {
+        this(locationsPrefix, Ordered.HIGHEST_PRECEDENCE);
+    }
+
+    public AbstractConventionEnvironmentPostProcessor(String[] locationsPrefix, int order) {
+        this(locationsPrefix, null, order);
+    }
+
+    public AbstractConventionEnvironmentPostProcessor(String[] locationsPrefix, String name, int order) {
+        this.locationsPrefix = locationsPrefix;
+        this.name = (null != name && !name.isEmpty()) ? name : UUID.randomUUID().toString();
+        this.order = order;
+    }
+
+    @Override
+    public int getOrder() {
+        return this.order;
+    }
+
+    @Override
+    public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+
+        final CompositePropertySource cps = new CompositePropertySource(name);
+
+        // basic
+        List<String> baseLocations = getBaseLocations();
+        ResourceAndLocation resourceAndLocation = findFirstReadable(baseLocations);
+        Optional.ofNullable(load(resourceAndLocation)).ifPresent(cps::addFirstPropertySource);
+
+        // profile
+        for (String profile : environment.getActiveProfiles()) {
+            List<String> profileLocations = getProfileLocations(profile);
+            resourceAndLocation = findFirstReadable(profileLocations);
+            Optional.ofNullable(load(resourceAndLocation)).ifPresent(cps::addFirstPropertySource);
+        }
+
+        environment.getPropertySources()
+                .addFirst(cps);
+    }
+
+    private PropertySource<?> load(ResourceAndLocation resourceAndLocation) {
+        if (resourceAndLocation == null) {
+            return null;
+        }
+
+        try (ResourceAndLocation rl = resourceAndLocation) {
+            Resource resource = rl.resource;
+            String location = rl.location;
+            if (location.endsWith(".conf")) {
+                return doLoad(hocon, resource, location);
+            }
+            if (location.endsWith(".yaml") || location.endsWith(".yml")) {
+                return doLoad(yaml, resource, location);
+            }
+            if (location.endsWith(".toml")) {
+                return doLoad(toml, resource, location);
+            }
+            if (location.endsWith(".properties") || location.endsWith(".xml")) {
+                return doLoad(prop, resource, location);
+            }
+            return null;
+        }
+    }
+
+    private PropertySource<?> doLoad(PropertySourceLoader loader, Resource resource, String location) {
+        final String name = String.format(" [%s]", location);
+
+        try {
+            List<PropertySource<?>> list = loader.load(name, resource);
+
+            if (list.size() == 1) {
+                return list.get(0);
+            } else if (list.size() == 0) {
+                return null;
+            } else {
+                throw new IllegalStateException("multiple document is NOT supported yet.");
+            }
+
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    private ResourceAndLocation findFirstReadable(Iterable<String> locations) {
+        for (String location : locations) {
+            Resource resource = resourceLoader.getResource(location);
+            if (resource.exists() && resource.isReadable()) {
+                return new ResourceAndLocation(resource, location);
+            }
+        }
+        return null;
+    }
+
+    private List<String> getBaseLocations() {
+        List<String> list = new LinkedList<>();
+        list.addAll(cross(new String[]{".conf"}));
+        list.addAll(cross(new String[]{".toml"}));
+        list.addAll(cross(new String[]{".yml", ".yaml"}));
+        list.addAll(cross(new String[]{".properties", ".xml"}));
+        return list;
+    }
+
+    private List<String> getProfileLocations(String profile) {
+        List<String> list = new LinkedList<>();
+        list.addAll(cross(profile, new String[]{".conf"}));
+        list.addAll(cross(profile, new String[]{".toml"}));
+        list.addAll(cross(profile, new String[]{".yml", ".yaml"}));
+        list.addAll(cross(profile, new String[]{".properties", ".xml"}));
+        return list;
+    }
+
+    private List<String> cross(String[] locationsSuffix) {
+        List<String> list = new LinkedList<>();
+        for (String prefix : locationsPrefix) {
+            for (String suffix : locationsSuffix) {
+                list.add(prefix + suffix);
+            }
+        }
+        return list;
+    }
+
+    private List<String> cross(String profile, String[] locationsSuffix) {
+        List<String> list = new LinkedList<>();
+
+        for (String prefix : locationsPrefix) {
+            for (String suffix : locationsSuffix) {
+                list.add(prefix + "-" + profile + suffix);
+            }
+        }
+        return list;
+    }
+
+    private static class ResourceAndLocation implements Closeable {
+        private final Resource resource;
+        private final String location;
+
+        public ResourceAndLocation(Resource resource, String location) {
+            this.resource = resource;
+            this.location = location;
+        }
+
+        @Override
+        public void close() {
+            if (resource != null) {
+                try {
+                    resource.getInputStream().close();
+                } catch (IOException ignore) {
+                    // NOP
+                }
+            }
+        }
+    }
+
+}
