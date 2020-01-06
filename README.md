@@ -27,7 +27,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource(value = "classpath:/config.toml", factory = TomlPropertySourceFactory.class)
-public class ApplicationConfig() {
+public class ApplicationConfig {
 
     // ...
 }
@@ -42,7 +42,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource(value = "classpath:/config.yaml", factory = YamlPropertySourceFactory.class)
-public class ApplicationConfig() {
+public class ApplicationConfig {
 
     // ...
 }
@@ -57,7 +57,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource(value = "classpath:/config.conf", factory = HoconPropertySourceFactory.class)
-public class ApplicationConfig() {
+public class ApplicationConfig {
 
     // ...
 }
