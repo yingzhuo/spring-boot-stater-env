@@ -11,7 +11,6 @@
 package org.springframework.boot.env;
 
 import org.springframework.boot.env.support.AbstractConventionEnvironmentPostProcessor;
-import org.springframework.core.Ordered;
 
 /**
  * @author <a href="mailto:yingzhor@gmail.com">应卓</a>
@@ -30,7 +29,7 @@ public class ConventionEnvironmentPostProcessor extends AbstractConventionEnviro
     private static final String NAME = "property-source";
 
     public ConventionEnvironmentPostProcessor() {
-        super(PREFIX, NAME, Ordered.HIGHEST_PRECEDENCE);
+        super(PREFIX, NAME);
     }
 
 }

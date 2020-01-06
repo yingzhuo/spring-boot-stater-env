@@ -12,7 +12,7 @@
 <dependency>
   <groupId>com.github.yingzhuo</groupId>
   <artifactId>spring-boot-stater-env</artifactId>
-  <version>0.0.4</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 

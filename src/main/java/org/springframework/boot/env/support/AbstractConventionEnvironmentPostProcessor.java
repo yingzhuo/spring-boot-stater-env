@@ -12,7 +12,6 @@ package org.springframework.boot.env.support;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.*;
-import org.springframework.core.Ordered;
 import org.springframework.core.env.CompositePropertySource;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertySource;
@@ -31,12 +30,11 @@ import java.util.UUID;
  * @author <a href="mailto:yingzhor@gmail.com">应卓</a>
  * @since 0.0.4
  */
-public abstract class AbstractConventionEnvironmentPostProcessor implements EnvironmentPostProcessor, Ordered {
+public abstract class AbstractConventionEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
     private final ResourceLoader resourceLoader = new DefaultResourceLoader();
     private final String[] locationsPrefix;
     private final String name;
-    private final int order;
 
     private final PropertySourceLoader hocon = new HoconPropertySourceLoader();
     private final PropertySourceLoader toml = new TomlPropertySourceLoader();
@@ -44,27 +42,18 @@ public abstract class AbstractConventionEnvironmentPostProcessor implements Envi
     private final PropertySourceLoader prop = new PropertiesPropertySourceLoader();
 
     public AbstractConventionEnvironmentPostProcessor(String[] locationsPrefix) {
-        this(locationsPrefix, Ordered.HIGHEST_PRECEDENCE);
+        this(locationsPrefix, null);
     }
 
-    public AbstractConventionEnvironmentPostProcessor(String[] locationsPrefix, int order) {
-        this(locationsPrefix, null, order);
-    }
-
-    public AbstractConventionEnvironmentPostProcessor(String[] locationsPrefix, String name, int order) {
+    public AbstractConventionEnvironmentPostProcessor(String[] locationsPrefix, String name) {
         this.locationsPrefix = locationsPrefix;
         this.name = (null != name && !name.isEmpty()) ? name : UUID.randomUUID().toString();
-        this.order = order;
-    }
-
-    @Override
-    public int getOrder() {
-        return this.order;
     }
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
 
+        final String[] activeProfiles = environment.getActiveProfiles();
         final CompositePropertySource cps = new CompositePropertySource(name);
 
         // basic
@@ -73,7 +62,7 @@ public abstract class AbstractConventionEnvironmentPostProcessor implements Envi
         Optional.ofNullable(load(resourceAndLocation)).ifPresent(cps::addFirstPropertySource);
 
         // profile
-        for (String profile : environment.getActiveProfiles()) {
+        for (String profile : activeProfiles) {
             List<String> profileLocations = getProfileLocations(profile);
             resourceAndLocation = findFirstReadable(profileLocations);
             Optional.ofNullable(load(resourceAndLocation)).ifPresent(cps::addFirstPropertySource);
