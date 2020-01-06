@@ -83,7 +83,7 @@ public class MyEnvironmentPostProcessor extends AbstractConventionEnvironmentPos
 }
 ```
 
-Do NOT forget register it. In your `classpath:/META-INF/spring.factories`
+**Do NOT** forget to register it. In your `classpath:/META-INF/spring.factories`:
 
 ```txt
 org.springframework.boot.env.EnvironmentPostProcessor=my.project.MyEnvironmentPostProcessor
