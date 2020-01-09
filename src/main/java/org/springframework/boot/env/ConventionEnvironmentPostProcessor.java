@@ -18,7 +18,7 @@ import org.springframework.boot.env.support.AbstractConventionEnvironmentPostPro
  */
 public class ConventionEnvironmentPostProcessor extends AbstractConventionEnvironmentPostProcessor {
 
-    private static final String[] PREFIX = {
+    private static final String[] DEFAULT_PREFIX = {
             "file:config/property-source",
             "file:property-source",
             "classpath:config/property-source",
@@ -29,7 +29,23 @@ public class ConventionEnvironmentPostProcessor extends AbstractConventionEnviro
     private static final String NAME = "property-source";
 
     public ConventionEnvironmentPostProcessor() {
-        super(PREFIX, NAME);
+        super(getPrefix(), NAME);
+    }
+
+    // since 1.0.1
+    private static String[] getPrefix() {
+        String envValue = System.getenv("CONVENTION_PROPERTY_SOURCE");
+
+        if (envValue == null || envValue.trim().isEmpty()) {
+            return DEFAULT_PREFIX;
+        }
+
+        String[] prefix = envValue.split(",");
+        for (int i = 0; i < prefix.length; i++) {
+            prefix[i] = prefix[i].trim();
+        }
+
+        return prefix;
     }
 
 }

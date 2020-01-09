@@ -12,7 +12,7 @@
 <dependency>
   <groupId>com.github.yingzhuo</groupId>
   <artifactId>spring-boot-stater-env</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
@@ -95,7 +95,7 @@ Now, file(s) will be loaded if exists.
  - `classpath:my-project.yml`
  - `classpath:my-project.yaml`
  - `classpath:my-project.properties`
- - `classpath:my-project.xml` ([dtd](http://java.sun.com/dtd/properties.dtd))
+ - `classpath:my-project.xml` (also properties)
 
 ### Contributing
 
