@@ -57,7 +57,7 @@ public abstract class AbstractConventionEnvironmentPostProcessor implements Envi
         final CompositePropertySource cps = new CompositePropertySource(name);
 
         // basic
-        List<String> baseLocations = getBaseLocations();
+        final List<String> baseLocations = getBaseLocations();
         ResourceAndLocation resourceAndLocation = findFirstReadable(baseLocations);
         Optional.ofNullable(load(resourceAndLocation)).ifPresent(cps::addFirstPropertySource);
 
@@ -68,8 +68,11 @@ public abstract class AbstractConventionEnvironmentPostProcessor implements Envi
             Optional.ofNullable(load(resourceAndLocation)).ifPresent(cps::addFirstPropertySource);
         }
 
-        environment.getPropertySources()
-                .addFirst(cps);
+        if (environment.getPropertySources().get("commandLineArgs") != null) {
+            environment.getPropertySources().addAfter("commandLineArgs", cps);
+        } else {
+            environment.getPropertySources().addFirst(cps);
+        }
     }
 
     private PropertySource<?> load(ResourceAndLocation resourceAndLocation) {
@@ -77,8 +80,8 @@ public abstract class AbstractConventionEnvironmentPostProcessor implements Envi
             return null;
         }
 
-        try (ResourceAndLocation rl = resourceAndLocation) {
-            Resource resource = rl.resource;
+        try (final ResourceAndLocation rl = resourceAndLocation) {
+            final Resource resource = rl.resource;
             String location = rl.location;
             if (location.endsWith(".conf")) {
                 return doLoad(hocon, resource, location);
@@ -168,7 +171,7 @@ public abstract class AbstractConventionEnvironmentPostProcessor implements Envi
         private final Resource resource;
         private final String location;
 
-        public ResourceAndLocation(Resource resource, String location) {
+        ResourceAndLocation(Resource resource, String location) {
             this.resource = resource;
             this.location = location;
         }
