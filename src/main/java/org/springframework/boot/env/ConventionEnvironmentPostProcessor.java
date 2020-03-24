@@ -11,6 +11,10 @@
 package org.springframework.boot.env;
 
 import org.springframework.boot.env.support.AbstractConventionEnvironmentPostProcessor;
+import org.springframework.boot.system.ApplicationHome;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:yingzhor@gmail.com">应卓</a>
@@ -18,18 +22,23 @@ import org.springframework.boot.env.support.AbstractConventionEnvironmentPostPro
  */
 public class ConventionEnvironmentPostProcessor extends AbstractConventionEnvironmentPostProcessor {
 
-    private static final String[] DEFAULT_PREFIX = {
-            "file:config/property",
-            "file:config/property-source",
-            "file:property",
-            "file:property-source",
-            "classpath:config/property",
-            "classpath:config/property-source",
-            "classpath:property",
-            "classpath:property-source",
-            "classpath:META-INF/property",
-            "classpath:META-INF/property-source",
-    };
+    private static final List<String> DEFAULT_PREFIX = new LinkedList<>();
+
+    static {
+        final String deploymentDir = "file:" + new ApplicationHome().getDir() + "/";
+        DEFAULT_PREFIX.add(deploymentDir + "property");
+        DEFAULT_PREFIX.add(deploymentDir + "property-source");
+        DEFAULT_PREFIX.add("file:config/property");
+        DEFAULT_PREFIX.add("file:config/property-source");
+        DEFAULT_PREFIX.add("file:property");
+        DEFAULT_PREFIX.add("file:property-source");
+        DEFAULT_PREFIX.add("classpath:config/property");
+        DEFAULT_PREFIX.add("classpath:config/property-source");
+        DEFAULT_PREFIX.add("classpath:property");
+        DEFAULT_PREFIX.add("classpath:property-source");
+        DEFAULT_PREFIX.add("classpath:META-INF/property");
+        DEFAULT_PREFIX.add("classpath:META-INF/property-source");
+    }
 
     private static final String NAME = "property-source";
 
@@ -41,7 +50,7 @@ public class ConventionEnvironmentPostProcessor extends AbstractConventionEnviro
         String envValue = System.getenv("CONVENTION_PROPERTY_SOURCE");
 
         if (envValue == null || envValue.trim().isEmpty()) {
-            return DEFAULT_PREFIX;
+            return DEFAULT_PREFIX.toArray(new String[]{});
         }
 
         String[] prefix = envValue.split(",");

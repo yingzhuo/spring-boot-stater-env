@@ -12,7 +12,7 @@
 <dependency>
   <groupId>com.github.yingzhuo</groupId>
   <artifactId>spring-boot-stater-env</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 
@@ -78,12 +78,12 @@ public class MyEnvironmentPostProcessor extends AbstractConventionEnvironmentPos
     private static final String NAME = "my-project";
 
     public ConventionEnvironmentPostProcessor() {
-        super(PREFIX, NAME, Ordered.HIGHEST_PRECEDENCE);
+        super(PREFIX, NAME);
     }
 }
 ```
 
-**Do NOT** forget to register it. In your `classpath:/META-INF/spring.factories`:
+**DO NOT** forget to register it. In your `classpath:/META-INF/spring.factories`:
 
 ```txt
 org.springframework.boot.env.EnvironmentPostProcessor=my.project.MyEnvironmentPostProcessor
@@ -96,6 +96,14 @@ Now, file(s) will be loaded if exists.
  - `classpath:my-project.yaml`
  - `classpath:my-project.properties`
  - `classpath:my-project.xml` (also properties)
+ 
+Also, file(s) will be loaded if exists and `myprofile` profile is active.
+ - `classpath:my-project-myprofile.conf`
+ - `classpath:my-project-myprofile.toml`
+ - `classpath:my-project-myprofile.yml`
+ - `classpath:my-project-myprofile.yaml`
+ - `classpath:my-project-myprofile.properties`
+ - `classpath:my-project-myprofile.xml` (also properties)
 
 ### Contributing
 
