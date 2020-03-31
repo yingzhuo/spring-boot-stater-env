@@ -8,9 +8,9 @@
  *
  * https://github.com/yingzhuo/spring-boot-stater-env
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-package org.springframework.boot.env;
+package com.github.yingzhuo.springboot.env;
 
-import org.springframework.boot.env.support.AbstractPropertySourceFactory;
+import com.github.yingzhuo.springboot.env.support.AbstractPropertySourceFactory;
 
 /**
  * @author <a href="mailto:yingzhor@gmail.com">应卓</a>

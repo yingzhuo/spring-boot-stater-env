@@ -8,39 +8,38 @@
  *
  * https://github.com/yingzhuo/spring-boot-stater-env
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-package org.springframework.boot.env;
+package com.github.yingzhuo.springboot.env;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
+import com.moandjiezana.toml.Toml;
+import org.springframework.boot.env.PropertySourceLoader;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
  * @author <a href="mailto:yingzhor@gmail.com">应卓</a>
- * @since 0.0.2
+ * @since 0.0.1
  */
-public class HoconPropertySourceLoader implements PropertySourceLoader {
+public class TomlPropertySourceLoader implements PropertySourceLoader {
 
     @Override
     public String[] getFileExtensions() {
-        return new String[]{"conf"};
+        return new String[]{"toml"};
     }
 
-    @Override
     public List<PropertySource<?>> load(String name, Resource resource) throws IOException {
-        Config config = ConfigFactory.parseURL(resource.getURL());
+        try (InputStream in = resource.getInputStream()) {
+            Toml toml = new Toml().read(in);
+            Map<String, Object> source = toml.toMap();
 
-        Map<String, Object> result = new LinkedHashMap<>();
-        buildFlattenedMap(result, config.root().unwrapped(), null);
-        if (result.isEmpty()) {
-            return Collections.emptyList();
+            Map<String, Object> result = new LinkedHashMap<>();
+            buildFlattenedMap(result, source, null);
+            return Collections.singletonList(new MapPropertySource(name, result));
         }
-
-        return Collections.singletonList(new MapPropertySource(name, result));
     }
 
     private void buildFlattenedMap(Map<String, Object> result, Map<String, Object> source, String root) {
@@ -75,5 +74,4 @@ public class HoconPropertySourceLoader implements PropertySourceLoader {
             }
         });
     }
-
 }

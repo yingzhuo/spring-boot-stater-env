@@ -21,10 +21,6 @@
 #### (1) use `toml` file as property source
 
 ```java
-import org.springframework.boot.env.TomlPropertySourceFactory;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-
 @Configuration
 @PropertySource(value = "classpath:/config.toml", factory = TomlPropertySourceFactory.class)
 public class ApplicationConfig {
@@ -36,10 +32,6 @@ public class ApplicationConfig {
 #### (2) use `yaml` file as property source
 
 ```java
-import org.springframework.boot.env.YamlPropertySourceFactory;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-
 @Configuration
 @PropertySource(value = "classpath:/config.yaml", factory = YamlPropertySourceFactory.class)
 public class ApplicationConfig {
@@ -51,10 +43,6 @@ public class ApplicationConfig {
 #### (3) use `hocon` file as property source **(highly recommended)**
 
 ```java
-import org.springframework.boot.env.HoconPropertySourceFactory;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-
 @Configuration
 @PropertySource(value = "classpath:/config.conf", factory = HoconPropertySourceFactory.class)
 public class ApplicationConfig {
@@ -66,8 +54,7 @@ public class ApplicationConfig {
 #### (4) use `AbstractConventionEnvironmentPostProcessor` load property-source file(s) implicitly
 
 ```java
-import org.springframework.boot.env.support.AbstractConventionEnvironmentPostProcessor;
-import org.springframework.core.Ordered;
+package my.project;
 
 public class MyEnvironmentPostProcessor extends AbstractConventionEnvironmentPostProcessor {
 

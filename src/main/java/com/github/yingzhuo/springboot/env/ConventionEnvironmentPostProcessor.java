@@ -8,12 +8,12 @@
  *
  * https://github.com/yingzhuo/spring-boot-stater-env
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-package org.springframework.boot.env;
+package com.github.yingzhuo.springboot.env;
 
-import org.springframework.boot.env.support.AbstractConventionEnvironmentPostProcessor;
+import com.github.yingzhuo.springboot.env.support.AbstractConventionEnvironmentPostProcessor;
 import org.springframework.boot.system.ApplicationHome;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,12 +22,18 @@ import java.util.List;
  */
 public class ConventionEnvironmentPostProcessor extends AbstractConventionEnvironmentPostProcessor {
 
-    private static final List<String> DEFAULT_PREFIX = new LinkedList<>();
+    private static final List<String> DEFAULT_PREFIX = new ArrayList<>(14);
 
     static {
-        final String deploymentDir = "file:" + new ApplicationHome().getDir() + "/";
-        DEFAULT_PREFIX.add(deploymentDir + "property");
-        DEFAULT_PREFIX.add(deploymentDir + "property-source");
+        String home = "file:" + new ApplicationHome().getDir();
+        if (!home.endsWith("/")) {
+            home += "/";
+        }
+
+        DEFAULT_PREFIX.add(home + "config/property");
+        DEFAULT_PREFIX.add(home + "config/property-source");
+        DEFAULT_PREFIX.add(home + "property");
+        DEFAULT_PREFIX.add(home + "property-source");
         DEFAULT_PREFIX.add("file:config/property");
         DEFAULT_PREFIX.add("file:config/property-source");
         DEFAULT_PREFIX.add("file:property");
@@ -43,22 +49,7 @@ public class ConventionEnvironmentPostProcessor extends AbstractConventionEnviro
     private static final String NAME = "property-source";
 
     public ConventionEnvironmentPostProcessor() {
-        super(getPrefix(), NAME);
-    }
-
-    private static String[] getPrefix() {
-        String envValue = System.getenv("CONVENTION_PROPERTY_SOURCE");
-
-        if (envValue == null || envValue.trim().isEmpty()) {
-            return DEFAULT_PREFIX.toArray(new String[]{});
-        }
-
-        String[] prefix = envValue.split(",");
-        for (int i = 0; i < prefix.length; i++) {
-            prefix[i] = prefix[i].trim();
-        }
-
-        return prefix;
+        super(DEFAULT_PREFIX.toArray(new String[0]), NAME);
     }
 
 }

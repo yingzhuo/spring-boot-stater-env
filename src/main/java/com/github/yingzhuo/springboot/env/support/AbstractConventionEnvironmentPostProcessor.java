@@ -8,8 +8,10 @@
  *
  * https://github.com/yingzhuo/spring-boot-stater-env
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-package org.springframework.boot.env.support;
+package com.github.yingzhuo.springboot.env.support;
 
+import com.github.yingzhuo.springboot.env.HoconPropertySourceLoader;
+import com.github.yingzhuo.springboot.env.TomlPropertySourceLoader;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.*;
 import org.springframework.core.env.CompositePropertySource;

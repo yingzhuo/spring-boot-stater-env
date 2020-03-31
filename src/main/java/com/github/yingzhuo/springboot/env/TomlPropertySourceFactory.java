@@ -8,9 +8,9 @@
  *
  * https://github.com/yingzhuo/spring-boot-stater-env
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-package org.springframework.boot.env;
+package com.github.yingzhuo.springboot.env;
 
-import org.springframework.boot.env.support.AbstractPropertySourceFactory;
+import com.github.yingzhuo.springboot.env.support.AbstractPropertySourceFactory;
 import org.springframework.core.io.support.PropertySourceFactory;
 
 /**
@@ -22,4 +22,5 @@ public class TomlPropertySourceFactory extends AbstractPropertySourceFactory imp
     public TomlPropertySourceFactory() {
         super(new TomlPropertySourceLoader());
     }
+
 }
