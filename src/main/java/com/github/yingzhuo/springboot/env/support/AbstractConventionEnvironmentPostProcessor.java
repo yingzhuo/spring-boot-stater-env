@@ -13,7 +13,10 @@ package com.github.yingzhuo.springboot.env.support;
 import com.github.yingzhuo.springboot.env.HoconPropertySourceLoader;
 import com.github.yingzhuo.springboot.env.TomlPropertySourceLoader;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.env.*;
+import org.springframework.boot.env.EnvironmentPostProcessor;
+import org.springframework.boot.env.PropertiesPropertySourceLoader;
+import org.springframework.boot.env.PropertySourceLoader;
+import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.core.env.CompositePropertySource;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertySource;
@@ -26,7 +29,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * @author <a href="mailto:yingzhor@gmail.com">应卓</a>
@@ -35,21 +37,17 @@ import java.util.UUID;
 public abstract class AbstractConventionEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
     private final ResourceLoader resourceLoader = new DefaultResourceLoader();
-    private final String[] locationsPrefix;
     private final String name;
+    private final String[] locationsPrefix;
 
     private final PropertySourceLoader hocon = new HoconPropertySourceLoader();
     private final PropertySourceLoader toml = new TomlPropertySourceLoader();
     private final PropertySourceLoader yaml = new YamlPropertySourceLoader();
     private final PropertySourceLoader prop = new PropertiesPropertySourceLoader();
 
-    public AbstractConventionEnvironmentPostProcessor(String[] locationsPrefix) {
-        this(locationsPrefix, null);
-    }
-
-    public AbstractConventionEnvironmentPostProcessor(String[] locationsPrefix, String name) {
+    public AbstractConventionEnvironmentPostProcessor(String name, String[] locationsPrefix) {
+        this.name = name;
         this.locationsPrefix = locationsPrefix;
-        this.name = (null != name && !name.isEmpty()) ? name : UUID.randomUUID().toString();
     }
 
     @Override

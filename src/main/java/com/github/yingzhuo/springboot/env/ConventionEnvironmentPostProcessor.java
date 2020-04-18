@@ -11,10 +11,7 @@
 package com.github.yingzhuo.springboot.env;
 
 import com.github.yingzhuo.springboot.env.support.AbstractConventionEnvironmentPostProcessor;
-import org.springframework.boot.system.ApplicationHome;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.github.yingzhuo.springboot.env.util.JarLocation;
 
 /**
  * @author <a href="mailto:yingzhor@gmail.com">应卓</a>
@@ -22,34 +19,16 @@ import java.util.List;
  */
 public class ConventionEnvironmentPostProcessor extends AbstractConventionEnvironmentPostProcessor {
 
-    private static final List<String> DEFAULT_PREFIX = new ArrayList<>(14);
-
-    static {
-        String home = "file:" + new ApplicationHome().getDir();
-        if (!home.endsWith("/")) {
-            home += "/";
-        }
-
-        DEFAULT_PREFIX.add(home + "config/property");
-        DEFAULT_PREFIX.add(home + "config/property-source");
-        DEFAULT_PREFIX.add(home + "property");
-        DEFAULT_PREFIX.add(home + "property-source");
-        DEFAULT_PREFIX.add("file:config/property");
-        DEFAULT_PREFIX.add("file:config/property-source");
-        DEFAULT_PREFIX.add("file:property");
-        DEFAULT_PREFIX.add("file:property-source");
-        DEFAULT_PREFIX.add("classpath:config/property");
-        DEFAULT_PREFIX.add("classpath:config/property-source");
-        DEFAULT_PREFIX.add("classpath:property");
-        DEFAULT_PREFIX.add("classpath:property-source");
-        DEFAULT_PREFIX.add("classpath:META-INF/property");
-        DEFAULT_PREFIX.add("classpath:META-INF/property-source");
-    }
-
-    private static final String NAME = "property-source";
-
     public ConventionEnvironmentPostProcessor() {
-        super(DEFAULT_PREFIX.toArray(new String[0]), NAME);
+        super("property-source", new String[]{
+                JarLocation.of().getFileAsResourceLocation("config/property"),
+                JarLocation.of().getFileAsResourceLocation("property"),
+                "file:config/property",
+                "file:property",
+                "classpath:config/property",
+                "classpath:property",
+                "classpath:META-INF/property",
+        });
     }
 
 }
