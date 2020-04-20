@@ -12,7 +12,7 @@
 <dependency>
   <groupId>com.github.yingzhuo</groupId>
   <artifactId>spring-boot-stater-env</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.x</version>
 </dependency>
 ```
 
@@ -65,7 +65,7 @@ public class MyEnvironmentPostProcessor extends AbstractConventionEnvironmentPos
     private static final String NAME = "my-project";
 
     public ConventionEnvironmentPostProcessor() {
-        super(PREFIX, NAME);
+        super(NAME, PREFIX);
     }
 }
 ```
