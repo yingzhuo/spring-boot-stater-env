@@ -20,36 +20,36 @@ import java.io.File;
  * @author <a href="mailto:yingzhor@gmail.com">应卓</a>
  * @since 1.1.2
  */
-public final class JarLocation {
+public final class JarDir {
 
     private final ApplicationHome home;
 
-    public static JarLocation of() {
-        return new JarLocation();
+    public static JarDir of() {
+        return new JarDir();
     }
 
-    public static JarLocation of(Class<?> sourceClass) {
-        return new JarLocation(sourceClass);
+    public static JarDir of(Class<?> sourceClass) {
+        return new JarDir(sourceClass);
     }
 
-    private JarLocation() {
+    private JarDir() {
         this.home = new ApplicationHome();
     }
 
-    private JarLocation(Class<?> sourceClass) {
+    private JarDir(Class<?> sourceClass) {
         this.home = new ApplicationHome(sourceClass);
     }
 
-    public File getFile(String child) {
+    public File getDir(String child) {
         return new File(home.getDir(), child);
     }
 
-    public Resource getFileAsResource(String child) {
-        return new FileSystemResource(getFile(child));
+    public Resource getDirAsResource(String child) {
+        return new FileSystemResource(getDir(child));
     }
 
-    public String getFileAsResourceLocation(String child) {
-        return "file:" + getFile(child).getAbsolutePath();
+    public String getDirAsResourceLocation(String child) {
+        return "file:" + getDir(child).getAbsolutePath();
     }
 
 }

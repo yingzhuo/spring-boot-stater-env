@@ -10,8 +10,8 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package com.github.yingzhuo.springboot.env;
 
-import org.springframework.boot.env.YamlPropertySourceLoader;
 import com.github.yingzhuo.springboot.env.support.AbstractPropertySourceFactory;
+import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.core.io.support.PropertySourceFactory;
 
 /**

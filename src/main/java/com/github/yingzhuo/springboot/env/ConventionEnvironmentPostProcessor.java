@@ -11,7 +11,7 @@
 package com.github.yingzhuo.springboot.env;
 
 import com.github.yingzhuo.springboot.env.support.AbstractConventionEnvironmentPostProcessor;
-import com.github.yingzhuo.springboot.env.util.JarLocation;
+import com.github.yingzhuo.springboot.env.util.JarDir;
 
 /**
  * @author <a href="mailto:yingzhor@gmail.com">应卓</a>
@@ -21,8 +21,8 @@ public class ConventionEnvironmentPostProcessor extends AbstractConventionEnviro
 
     public ConventionEnvironmentPostProcessor() {
         super("property-source", new String[]{
-                JarLocation.of().getFileAsResourceLocation("config/property"),
-                JarLocation.of().getFileAsResourceLocation("property"),
+                JarDir.of().getDirAsResourceLocation("config/property"),
+                JarDir.of().getDirAsResourceLocation("property"),
                 "file:config/property",
                 "file:property",
                 "classpath:config/property",
