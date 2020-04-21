@@ -15,12 +15,13 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * @author <a href="mailto:yingzhor@gmail.com">应卓</a>
  * @since 1.1.2
  */
-public final class JarDir {
+public final class JarDir implements Serializable {
 
     private final ApplicationHome home;
 
@@ -41,6 +42,9 @@ public final class JarDir {
     }
 
     public File getDir(String child) {
+        if (child == null) {
+            return this.home.getDir();
+        }
         return new File(home.getDir(), child);
     }
 
@@ -50,6 +54,11 @@ public final class JarDir {
 
     public String getDirAsResourceLocation(String child) {
         return "file:" + getDir(child).getAbsolutePath();
+    }
+
+    @Override
+    public String toString() {
+        return this.home.getDir().getAbsolutePath();
     }
 
 }
