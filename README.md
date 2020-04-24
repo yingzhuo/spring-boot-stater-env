@@ -4,6 +4,11 @@
 
 # spring-boot-starter-env
 
+### Requires
+
+* Java 8+
+* SpringBoot 2.2.0+
+
 ### Download
 
 * maven / gradle is highly recommended.
@@ -12,7 +17,7 @@
 <dependency>
   <groupId>com.github.yingzhuo</groupId>
   <artifactId>spring-boot-stater-env</artifactId>
-  <version>1.1.x</version>
+  <version>1.2.x</version>
 </dependency>
 ```
 

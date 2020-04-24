@@ -22,10 +22,16 @@ public class ConventionEnvironmentPostProcessor extends AbstractConventionEnviro
     public ConventionEnvironmentPostProcessor() {
         super("property-source", new String[]{
                 JarDir.of().getDirAsResourceLocation("config/property"),
+                JarDir.of().getDirAsResourceLocation(".config/property"),
+                JarDir.of().getDirAsResourceLocation("_config/property"),
                 JarDir.of().getDirAsResourceLocation("property"),
                 "file:config/property",
+                "file:.config/property",
+                "file:_config/property",
                 "file:property",
                 "classpath:config/property",
+                "classpath:.config/property",
+                "classpath:_config/property",
                 "classpath:property",
                 "classpath:META-INF/property",
         });
