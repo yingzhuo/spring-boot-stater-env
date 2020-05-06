@@ -11,44 +11,26 @@
 package com.github.yingzhuo.springboot.env;
 
 import com.github.yingzhuo.springboot.env.support.AbstractConventionEnvironmentPostProcessor;
-import com.github.yingzhuo.springboot.env.util.JarDir;
 import org.springframework.boot.SpringApplication;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 /**
  * @author <a href="mailto:yingzhor@gmail.com">应卓</a>
- * @since 0.0.4
+ * @since 1.2.3
  */
-public class ConventionEnvironmentPostProcessor extends AbstractConventionEnvironmentPostProcessor {
-
-    public ConventionEnvironmentPostProcessor() {
-    }
+public class ApplicationConventionEnvironmentPostProcessor extends AbstractConventionEnvironmentPostProcessor {
 
     @Override
     protected String getName(ConfigurableEnvironment environment, SpringApplication application) {
-        return "property-source";
+        return "application";
     }
 
     @Override
     protected String[] getLocationsPrefix(ConfigurableEnvironment environment, SpringApplication application) {
         final Class<?> mainClass = application.getMainApplicationClass();
-        final String packageName = mainClass.getPackage().getName().replaceAll("\\.", "/");
 
         return new String[]{
-                JarDir.of(mainClass).getDirAsResourceLocation("config/property"),
-                JarDir.of(mainClass).getDirAsResourceLocation(".config/property"),
-                JarDir.of(mainClass).getDirAsResourceLocation("_config/property"),
-                JarDir.of(mainClass).getDirAsResourceLocation("property"),
-                "file:config/property",
-                "file:.config/property",
-                "file:_config/property",
-                "file:property",
-                "classpath:config/property",
-                "classpath:.config/property",
-                "classpath:_config/property",
-                "classpath:property",
-                "classpath:META-INF/property",
-                "classpath:" + packageName + "/property"
+                "classpath:" + mainClass.getPackage().getName().replaceAll("\\.", "/") + "/" + mainClass.getSimpleName()
         };
     }
 

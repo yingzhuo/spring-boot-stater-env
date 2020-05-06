@@ -2,5 +2,5 @@ org.springframework.boot.env.PropertySourceLoader=\
     com.github.yingzhuo.springboot.env.HoconPropertySourceLoader,\
     com.github.yingzhuo.springboot.env.TomlPropertySourceLoader
 org.springframework.boot.env.EnvironmentPostProcessor=\
-    com.github.yingzhuo.springboot.env.ConventionEnvironmentPostProcessor,\
+    com.github.yingzhuo.springboot.env.ApplicationConventionEnvironmentPostProcessor,\
     com.github.yingzhuo.springboot.env.JarDirEnvironmentPostProcessor
