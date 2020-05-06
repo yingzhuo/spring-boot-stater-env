@@ -12,6 +12,8 @@ package com.github.yingzhuo.springboot.env;
 
 import com.github.yingzhuo.springboot.env.support.AbstractConventionEnvironmentPostProcessor;
 import com.github.yingzhuo.springboot.env.util.JarDir;
+import org.springframework.boot.SpringApplication;
+import org.springframework.core.env.ConfigurableEnvironment;
 
 /**
  * @author <a href="mailto:yingzhor@gmail.com">应卓</a>
@@ -20,7 +22,19 @@ import com.github.yingzhuo.springboot.env.util.JarDir;
 public class ConventionEnvironmentPostProcessor extends AbstractConventionEnvironmentPostProcessor {
 
     public ConventionEnvironmentPostProcessor() {
-        super("property-source", new String[]{
+    }
+
+    @Override
+    protected String overwriteName(ConfigurableEnvironment environment, SpringApplication application) {
+        return "property-source";
+    }
+
+    @Override
+    protected String[] overwriteLocationsPrefix(ConfigurableEnvironment environment, SpringApplication application) {
+        final Class<?> mainClass = application.getMainApplicationClass();
+        final String packageName = mainClass.getPackage().getName().replaceAll("\\.", "/");
+
+        return new String[]{
                 JarDir.of().getDirAsResourceLocation("config/property"),
                 JarDir.of().getDirAsResourceLocation(".config/property"),
                 JarDir.of().getDirAsResourceLocation("_config/property"),
@@ -34,7 +48,8 @@ public class ConventionEnvironmentPostProcessor extends AbstractConventionEnviro
                 "classpath:_config/property",
                 "classpath:property",
                 "classpath:META-INF/property",
-        });
+                "classpath:" + packageName + "/property"
+        };
     }
 
 }

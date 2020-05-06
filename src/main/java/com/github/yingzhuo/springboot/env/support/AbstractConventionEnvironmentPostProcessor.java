@@ -28,6 +28,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -37,21 +38,37 @@ import java.util.Optional;
 public abstract class AbstractConventionEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
     private final ResourceLoader resourceLoader = new DefaultResourceLoader();
-    private final String name;
-    private final String[] locationsPrefix;
+    private String name;
+    private String[] locationsPrefix;
 
     private final PropertySourceLoader hocon = new HoconPropertySourceLoader();
     private final PropertySourceLoader toml = new TomlPropertySourceLoader();
     private final PropertySourceLoader yaml = new YamlPropertySourceLoader();
     private final PropertySourceLoader prop = new PropertiesPropertySourceLoader();
 
+    public AbstractConventionEnvironmentPostProcessor() {
+        this(null, null);
+    }
+
+    @Deprecated
     public AbstractConventionEnvironmentPostProcessor(String name, String[] locationsPrefix) {
         this.name = name;
         this.locationsPrefix = locationsPrefix;
     }
 
     @Override
-    public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+    public final void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+
+        if (this.name == null) {
+            this.name = overwriteName(environment, application);
+        }
+
+        if (this.locationsPrefix == null) {
+            this.locationsPrefix = overwriteLocationsPrefix(environment, application);
+        }
+
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(locationsPrefix);
 
         final String[] activeProfiles = environment.getActiveProfiles();
         final CompositePropertySource cps = new CompositePropertySource(name);
@@ -73,6 +90,14 @@ public abstract class AbstractConventionEnvironmentPostProcessor implements Envi
         } else {
             environment.getPropertySources().addFirst(cps);
         }
+    }
+
+    protected String overwriteName(ConfigurableEnvironment environment, SpringApplication application) {
+        return null;
+    }
+
+    protected String[] overwriteLocationsPrefix(ConfigurableEnvironment environment, SpringApplication application) {
+        return null;
     }
 
     private PropertySource<?> load(ResourceAndLocation resourceAndLocation) {
