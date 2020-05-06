@@ -25,20 +25,20 @@ public class ConventionEnvironmentPostProcessor extends AbstractConventionEnviro
     }
 
     @Override
-    protected String overwriteName(ConfigurableEnvironment environment, SpringApplication application) {
+    protected String getName(ConfigurableEnvironment environment, SpringApplication application) {
         return "property-source";
     }
 
     @Override
-    protected String[] overwriteLocationsPrefix(ConfigurableEnvironment environment, SpringApplication application) {
+    protected String[] getLocationsPrefix(ConfigurableEnvironment environment, SpringApplication application) {
         final Class<?> mainClass = application.getMainApplicationClass();
         final String packageName = mainClass.getPackage().getName().replaceAll("\\.", "/");
 
         return new String[]{
-                JarDir.of().getDirAsResourceLocation("config/property"),
-                JarDir.of().getDirAsResourceLocation(".config/property"),
-                JarDir.of().getDirAsResourceLocation("_config/property"),
-                JarDir.of().getDirAsResourceLocation("property"),
+                JarDir.of(mainClass).getDirAsResourceLocation("config/property"),
+                JarDir.of(mainClass).getDirAsResourceLocation(".config/property"),
+                JarDir.of(mainClass).getDirAsResourceLocation("_config/property"),
+                JarDir.of(mainClass).getDirAsResourceLocation("property"),
                 "file:config/property",
                 "file:.config/property",
                 "file:_config/property",

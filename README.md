@@ -63,15 +63,17 @@ package my.project;
 
 public class MyEnvironmentPostProcessor extends AbstractConventionEnvironmentPostProcessor {
 
-    private static final String[] PREFIX = {
-            "classpath:my-project",
-    };
-
-    private static final String NAME = "my-project";
-
-    public ConventionEnvironmentPostProcessor() {
-        super(NAME, PREFIX);
-    }
+     @Override
+     protected String getName(ConfigurableEnvironment environment, SpringApplication application) {
+         return "property-source";
+     }
+ 
+     @Override
+     protected String[] getLocationsPrefix(ConfigurableEnvironment environment, SpringApplication application) {
+         return new String[]{
+                 "classpath:my-project"
+         };
+     }
 }
 ```
 

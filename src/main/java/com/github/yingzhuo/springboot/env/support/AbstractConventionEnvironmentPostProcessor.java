@@ -38,7 +38,6 @@ import java.util.Optional;
 public abstract class AbstractConventionEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
     private final ResourceLoader resourceLoader = new DefaultResourceLoader();
-    private String name;
     private String[] locationsPrefix;
 
     private final PropertySourceLoader hocon = new HoconPropertySourceLoader();
@@ -47,31 +46,15 @@ public abstract class AbstractConventionEnvironmentPostProcessor implements Envi
     private final PropertySourceLoader prop = new PropertiesPropertySourceLoader();
 
     public AbstractConventionEnvironmentPostProcessor() {
-        this(null, null);
-    }
-
-    @Deprecated
-    public AbstractConventionEnvironmentPostProcessor(String name, String[] locationsPrefix) {
-        this.name = name;
-        this.locationsPrefix = locationsPrefix;
     }
 
     @Override
     public final void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
 
-        if (this.name == null) {
-            this.name = overwriteName(environment, application);
-        }
-
-        if (this.locationsPrefix == null) {
-            this.locationsPrefix = overwriteLocationsPrefix(environment, application);
-        }
-
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(locationsPrefix);
+        this.locationsPrefix = Objects.requireNonNull(getLocationsPrefix(environment, application));
 
         final String[] activeProfiles = environment.getActiveProfiles();
-        final CompositePropertySource cps = new CompositePropertySource(name);
+        final CompositePropertySource cps = new CompositePropertySource(Objects.requireNonNull(getName(environment, application)));
 
         // basic
         final List<String> baseLocations = getBaseLocations();
@@ -92,13 +75,9 @@ public abstract class AbstractConventionEnvironmentPostProcessor implements Envi
         }
     }
 
-    protected String overwriteName(ConfigurableEnvironment environment, SpringApplication application) {
-        return null;
-    }
+    protected abstract String getName(ConfigurableEnvironment environment, SpringApplication application);
 
-    protected String[] overwriteLocationsPrefix(ConfigurableEnvironment environment, SpringApplication application) {
-        return null;
-    }
+    protected abstract String[] getLocationsPrefix(ConfigurableEnvironment environment, SpringApplication application);
 
     private PropertySource<?> load(ResourceAndLocation resourceAndLocation) {
         if (resourceAndLocation == null) {
