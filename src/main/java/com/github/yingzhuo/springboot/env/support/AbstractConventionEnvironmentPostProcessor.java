@@ -51,7 +51,11 @@ public abstract class AbstractConventionEnvironmentPostProcessor implements Envi
     @Override
     public final void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
 
-        this.locationsPrefix = Objects.requireNonNull(getLocationsPrefix(environment, application));
+        this.locationsPrefix = getLocationsPrefix(environment, application);
+
+        if (locationsPrefix == null || locationsPrefix.length == 0) {
+            return;
+        }
 
         final String[] activeProfiles = environment.getActiveProfiles();
         final CompositePropertySource cps = new CompositePropertySource(Objects.requireNonNull(getName(environment, application)));
@@ -153,6 +157,7 @@ public abstract class AbstractConventionEnvironmentPostProcessor implements Envi
     private List<String> cross(String[] locationsSuffix) {
         List<String> list = new LinkedList<>();
         for (String prefix : locationsPrefix) {
+            if (prefix == null) continue;
             for (String suffix : locationsSuffix) {
                 list.add(prefix + suffix);
             }
@@ -164,6 +169,7 @@ public abstract class AbstractConventionEnvironmentPostProcessor implements Envi
         List<String> list = new LinkedList<>();
 
         for (String prefix : locationsPrefix) {
+            if (prefix == null) continue;
             for (String suffix : locationsSuffix) {
                 list.add(prefix + "-" + profile + suffix);
             }

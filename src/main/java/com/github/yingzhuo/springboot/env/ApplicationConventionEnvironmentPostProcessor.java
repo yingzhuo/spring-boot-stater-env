@@ -29,6 +29,11 @@ public class ApplicationConventionEnvironmentPostProcessor extends AbstractConve
     protected String[] getLocationsPrefix(ConfigurableEnvironment environment, SpringApplication application) {
         final Class<?> mainClass = application.getMainApplicationClass();
 
+        // 疑似是Spring的bug
+        if (mainClass == null) {
+            return new String[0];
+        }
+
         return new String[]{
                 "classpath:" + mainClass.getPackage().getName().replaceAll("\\.", "/") + "/" + mainClass.getSimpleName()
         };
