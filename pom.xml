@@ -55,8 +55,8 @@
     <properties>
         <encoding>UTF-8</encoding>
         <java.version>1.8</java.version>
-        <springboot.version>2.2.6.RELEASE</springboot.version>
-        <spring.version>5.2.5.RELEASE</spring.version>
+        <springboot.version>2.2.7.RELEASE</springboot.version>
+        <spring.version>5.2.6.RELEASE</spring.version>
     </properties>
 
     <dependencyManagement>
