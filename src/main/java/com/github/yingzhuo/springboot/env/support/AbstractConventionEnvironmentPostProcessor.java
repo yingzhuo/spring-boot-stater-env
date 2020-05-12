@@ -38,12 +38,11 @@ import java.util.Optional;
 public abstract class AbstractConventionEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
     private final ResourceLoader resourceLoader = new DefaultResourceLoader();
-    private String[] locationsPrefix;
-
     private final PropertySourceLoader hocon = new HoconPropertySourceLoader();
     private final PropertySourceLoader toml = new TomlPropertySourceLoader();
     private final PropertySourceLoader yaml = new YamlPropertySourceLoader();
     private final PropertySourceLoader prop = new PropertiesPropertySourceLoader();
+    private String[] locationsPrefix;
 
     public AbstractConventionEnvironmentPostProcessor() {
     }

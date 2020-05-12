@@ -25,20 +25,20 @@ public final class JarDir implements Serializable {
 
     private final ApplicationHome home;
 
-    public static JarDir of() {
-        return new JarDir();
-    }
-
-    public static JarDir of(Class<?> sourceClass) {
-        return new JarDir(sourceClass);
-    }
-
     private JarDir() {
         this.home = new ApplicationHome();
     }
 
     private JarDir(Class<?> sourceClass) {
         this.home = new ApplicationHome(sourceClass);
+    }
+
+    public static JarDir of() {
+        return new JarDir();
+    }
+
+    public static JarDir of(Class<?> sourceClass) {
+        return new JarDir(sourceClass);
     }
 
     public File getDir(String child) {
