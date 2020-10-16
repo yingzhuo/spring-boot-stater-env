@@ -4,6 +4,6 @@ org.springframework.boot.env.PropertySourceLoader=\
 org.springframework.boot.env.EnvironmentPostProcessor=\
     com.github.yingzhuo.springboot.env.postprocessor.EnvironmentPostProcessor,\
     com.github.yingzhuo.springboot.env.postprocessor.MainClassEnvironmentPostProcessor,\
-    com.github.yingzhuo.springboot.env.postprocessor.ConventionEnvironmentPostProcessors.Property,\
     com.github.yingzhuo.springboot.env.postprocessor.ConventionEnvironmentPostProcessors.Global,\
+    com.github.yingzhuo.springboot.env.postprocessor.ConventionEnvironmentPostProcessors.Property,\
     com.github.yingzhuo.springboot.env.postprocessor.ConventionEnvironmentPostProcessors.Git
