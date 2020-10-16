@@ -37,6 +37,33 @@ public interface ConventionEnvironmentPostProcessors {
         }
     }
 
+    static class Global extends AbstractConventionEnvironmentPostProcessor {
+        @Override
+        protected String getName(ConfigurableEnvironment environment, SpringApplication application) {
+            return "global";
+        }
+
+        @Override
+        protected String[] getLocationsPrefix(ConfigurableEnvironment environment, SpringApplication application) {
+            final Class<?> mainClass = application.getMainApplicationClass();
+            return new String[]{
+                    JarDir.of(mainClass).getDirAsResourceLocation("config/global"),
+                    JarDir.of(mainClass).getDirAsResourceLocation(".config/global"),
+                    JarDir.of(mainClass).getDirAsResourceLocation("_config/global"),
+                    JarDir.of(mainClass).getDirAsResourceLocation("global"),
+                    "file:config/global",
+                    "file:.config/global",
+                    "file:_config/global",
+                    "file:global",
+                    "classpath:config/global",
+                    "classpath:.config/global",
+                    "classpath:_config/global",
+                    "classpath:global",
+                    "classpath:META-INF/global"
+            };
+        }
+    }
+
     static class Git extends AbstractConventionEnvironmentPostProcessor {
         @Override
         protected String getName(ConfigurableEnvironment environment, SpringApplication application) {
