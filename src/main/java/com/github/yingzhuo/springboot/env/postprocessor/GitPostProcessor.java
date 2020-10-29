@@ -6,18 +6,25 @@
 |___/ .__/|_|  |_|_| |_|\__, |     |_.__/ \___/ \___/ \__|    |___/\__\__,_|_|   \__|     \___|_| |_|\_/
     |_|                 |___/
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-package com.github.yingzhuo.springboot.env.propertysource;
+package com.github.yingzhuo.springboot.env.postprocessor;
 
-import com.github.yingzhuo.springboot.env.propertysource.loader.HoconPropertySourceLoader;
+import org.springframework.boot.SpringApplication;
+import org.springframework.core.env.ConfigurableEnvironment;
 
 /**
  * @author 应卓
- * @since 1.6.33
+ * @since 1.3.0
  */
-public class HoconPropertySourceFactory extends AbstractPropertySourceFactory {
+public class GitPostProcessor extends AbstractPostProcessor {
 
-    public HoconPropertySourceFactory() {
-        super(new HoconPropertySourceLoader());
+    @Override
+    protected String getName(ConfigurableEnvironment environment, SpringApplication application) {
+        return "git";
+    }
+
+    @Override
+    protected String[] getLocationsPrefix(ConfigurableEnvironment environment, SpringApplication application) {
+        return new String[]{"classpath:git", "classpath:META-INF/git", "classpath:config/git"};
     }
 
 }
