@@ -14,10 +14,11 @@
 * maven / gradle is highly recommended.
 
 ```xml
+
 <dependency>
-  <groupId>com.github.yingzhuo</groupId>
-  <artifactId>spring-boot-stater-env</artifactId>
-  <version>2.0.0</version>
+    <groupId>com.github.yingzhuo</groupId>
+    <artifactId>spring-boot-stater-env</artifactId>
+    <version>2.0.1</version>
 </dependency>
 ```
 
@@ -26,10 +27,10 @@
 #### (1) use `toml` file as property source
 
 ```java
+
 @Configuration
 @PropertySource(value = "classpath:/config.toml", factory = TomlPropertySourceFactory.class)
 public class ApplicationConfig {
-
     // ...
 }
 ```
@@ -37,10 +38,10 @@ public class ApplicationConfig {
 #### (2) use `yaml` file as property source
 
 ```java
+
 @Configuration
 @PropertySource(value = "classpath:/config.yaml", factory = YamlPropertySourceFactory.class)
 public class ApplicationConfig {
-
     // ...
 }
 ```
@@ -48,10 +49,10 @@ public class ApplicationConfig {
 #### (3) use `hocon` file as property source **(highly recommended)**
 
 ```java
+
 @Configuration
 @PropertySource(value = "classpath:/config.conf", factory = HoconPropertySourceFactory.class)
 public class ApplicationConfig {
-
     // ...
 }
 ```
@@ -63,17 +64,17 @@ package my.project;
 
 public class MyEnvironmentPostProcessor extends AbstractConventionEnvironmentPostProcessor {
 
-     @Override
-     protected String getName(ConfigurableEnvironment environment, SpringApplication application) {
-         return "property-source";
-     }
- 
-     @Override
-     protected String[] getLocationsPrefix(ConfigurableEnvironment environment, SpringApplication application) {
-         return new String[]{
-                 "classpath:my-project"
-         };
-     }
+    @Override
+    protected String getName(ConfigurableEnvironment environment, SpringApplication application) {
+        return "property-source";
+    }
+
+    @Override
+    protected String[] getLocationsPrefix(ConfigurableEnvironment environment, SpringApplication application) {
+        return new String[]{
+                "classpath:my-project"
+        };
+    }
 }
 ```
 
@@ -84,20 +85,22 @@ org.springframework.boot.env.EnvironmentPostProcessor=my.project.MyEnvironmentPo
 ```
 
 Now, file(s) will be loaded if exists.
- - `classpath:my-project.conf`
- - `classpath:my-project.toml`
- - `classpath:my-project.yml`
- - `classpath:my-project.yaml`
- - `classpath:my-project.properties`
- - `classpath:my-project.xml` (also properties)
- 
+
+- `classpath:my-project.conf`
+- `classpath:my-project.toml`
+- `classpath:my-project.yml`
+- `classpath:my-project.yaml`
+- `classpath:my-project.properties`
+- `classpath:my-project.xml` (also properties)
+
 Also, file(s) will be loaded if exists and `myprofile` profile is active.
- - `classpath:my-project-myprofile.conf`
- - `classpath:my-project-myprofile.toml`
- - `classpath:my-project-myprofile.yml`
- - `classpath:my-project-myprofile.yaml`
- - `classpath:my-project-myprofile.properties`
- - `classpath:my-project-myprofile.xml` (also properties)
+
+- `classpath:my-project-myprofile.conf`
+- `classpath:my-project-myprofile.toml`
+- `classpath:my-project-myprofile.yml`
+- `classpath:my-project-myprofile.yaml`
+- `classpath:my-project-myprofile.properties`
+- `classpath:my-project-myprofile.xml` (also properties)
 
 ### Contributing
 
